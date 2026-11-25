@@ -192,6 +192,8 @@ img.type-icon{display:inline-block;background:none;object-fit:contain;vertical-a
 .page-indicator strong{font-variant-numeric:tabular-nums;color:var(--ink)}
 .page-jump input{border-radius:10px}
 .page-jump button{border-radius:999px}
+.picker-trigger .picker-chevron{display:block;width:18px;height:18px;flex:none;margin-left:auto;stroke-width:2.2;transition:transform .18s ease}
+.picker-trigger[aria-expanded=true] .picker-chevron{transform:rotate(180deg)}
 @media(max-width:500px){
   .catalog,.detail-page{border-radius:18px}
   .card{border-radius:16px}
