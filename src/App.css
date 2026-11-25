@@ -91,3 +91,60 @@
 .picker-menu button{height:43px;gap:10px}
 .picker-menu{max-height:310px}
 @media(max-width:500px){.type-icon{width:25px;height:25px}.type-icon svg{width:16px;height:16px}.picker-trigger{padding-inline:8px;font-size:12px}.picker-menu{max-height:270px}}
+
+/* Bordas de guia de campo e fichas mais completas no catálogo. */
+:root{--outline:#b9c7c1}
+.catalog,.detail-page{border-color:var(--outline)}
+.filters,.region-filter,.result-line{border-color:var(--outline)}
+.region-filter{border-bottom-width:1px}
+.result-line{border-bottom-width:1px}
+.catalog-title>span{border:1px solid var(--outline)}
+.picker-trigger,.sort-options,.region-list button,.page-jump input,.pagination button{border-color:var(--outline)}
+.sort-options button.selected{outline:1px solid var(--ink)}
+.hero-feature{border-color:#fff7d9;outline:1px solid #d7be77;outline-offset:3px}
+.cards{gap:12px}
+.card{--card-accent:#87938b;display:grid;grid-template-rows:auto 145px auto auto 1fr;gap:9px;align-content:start;min-height:305px;padding:13px;border:1px solid var(--outline);border-top:3px solid var(--card-accent);background:#fffefb;transition:background .16s,border-color .16s,transform .16s,box-shadow .16s}
+.card:hover,.card:focus-visible{background:#fffefb;border-color:var(--card-accent);box-shadow:4px 5px 0 color-mix(in srgb,var(--card-accent) 24%,transparent)}
+.card-number{font-size:11px;line-height:1}
+.card-art{display:grid;place-items:center;min-width:0;height:145px;border:1px solid color-mix(in srgb,var(--card-accent) 32%,#d7ded8);background:color-mix(in srgb,var(--card-accent) 9%,#fff);overflow:hidden}
+.card-art img,.card-art .art-fallback{display:block;width:132px;height:132px;max-width:100%;object-fit:contain;align-self:center;margin:0}
+.card-info{display:flex;align-items:start;justify-content:space-between;gap:6px;min-width:0;min-height:40px}
+.card-info strong{font-size:17px;padding:0;line-height:1.16}
+.card-info .card-arrow{position:static;flex:none;color:var(--card-accent);font-size:19px;line-height:1}
+.card-types{display:flex;flex-wrap:wrap;align-content:start;gap:4px;min-height:27px}
+.card-type{display:inline-flex;align-items:center;gap:5px;min-height:25px;border:1px solid color-mix(in srgb,var(--card-accent) 35%,#d8ded8);background:#fff;padding:2px 7px 2px 3px;font-size:11px;font-weight:700;white-space:nowrap}
+.card-type .type-icon{width:18px;height:18px}
+.card-type .type-icon svg{width:12px;height:12px}
+.card-measures{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-self:end;border-top:1px solid var(--outline);padding-top:9px;width:100%}
+.card-measures>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.card-measures small{font-size:11px;color:var(--muted)}
+.card-measures b{font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card-extra-placeholder{align-self:end;display:block;border-top:1px solid var(--outline);padding-top:13px;width:100%;font-size:11px;color:var(--muted)}
+.card-type-fire{--card-accent:#dc7442}.card-type-water{--card-accent:#4b8fc6}.card-type-electric{--card-accent:#d4ac29}.card-type-grass{--card-accent:#5eaf52}.card-type-ice{--card-accent:#63b9c5}.card-type-fighting{--card-accent:#b86a45}.card-type-poison{--card-accent:#9466a8}.card-type-ground{--card-accent:#af8b4d}.card-type-flying{--card-accent:#789ebc}.card-type-psychic{--card-accent:#cf7094}.card-type-bug{--card-accent:#8ea543}.card-type-rock{--card-accent:#917f5f}.card-type-ghost{--card-accent:#7b6b98}.card-type-dragon{--card-accent:#6476ae}.card-type-dark{--card-accent:#5a5866}.card-type-steel{--card-accent:#738f99}.card-type-fairy{--card-accent:#cc84a8}
+.profile-art,.facts>div,.evolution-list button,.moves span,.varieties button{border:1px solid var(--outline)}
+.facts>div{padding:10px;background:#fbfaf6}
+.detail-section{border-color:var(--outline)}
+@media(max-width:500px){
+  .hero-inner{padding-block:19px 23px;gap:13px}
+  .hero-label{margin-bottom:10px}
+  .hero h1{font-size:38px;margin-bottom:10px}
+  .hero-copy>p:not(.hero-label){font-size:14px;line-height:1.4;margin-bottom:8px}
+  .hero-link{padding:5px 0}
+  .hero-feature{height:112px;padding:8px;grid-template-columns:minmax(0,1fr) 94px}
+  .hero-feature img{width:92px;height:94px}
+  .feature-name{font-size:22px}
+  .feature-bottom{font-size:11px}
+  .cards{gap:8px}
+  .card{min-height:250px;grid-template-rows:auto 102px auto auto 1fr;gap:7px;padding:9px}
+  .card-art{height:102px}
+  .card-art img,.card-art .art-fallback{width:94px;height:94px}
+  .card-info{min-height:34px}
+  .card-info strong{font-size:14px}
+  .card-info .card-arrow{font-size:16px}
+  .card-type{gap:3px;min-height:22px;padding:2px 4px 2px 2px;font-size:11px}
+  .card-type .type-icon{width:16px;height:16px}
+  .card-type .type-icon svg{width:11px;height:11px}
+  .card-measures{gap:3px;padding-top:7px}
+  .card-measures small{font-size:11px}
+  .card-measures b{font-size:12px}
+}

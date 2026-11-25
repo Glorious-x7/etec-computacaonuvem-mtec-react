@@ -12,11 +12,45 @@ async function getJson(url, signal) {
   return response.json()
 }
 
+const cardDetailsCache = new Map()
+
+function getCardDetails(name) {
+  if (!cardDetailsCache.has(name)) {
+    const request = getJson(`${API}/pokemon/${name}`)
+      .then(({ types, height, weight }) => ({ types, height, weight }))
+      .catch(error => { cardDetailsCache.delete(name); throw error })
+    cardDetailsCache.set(name, request)
+  }
+  return cardDetailsCache.get(name)
+}
+
 function PokemonArt({ id, name, className = '' }) {
   const [source, setSource] = useState(artwork(id))
   if (!source) return <span className={`art-fallback ${className}`} aria-label={`Sem imagem de ${name}`}>#{id}</span>
   return <img className={className} src={source} alt={`Ilustração de ${formatName(name)}`}
     loading="lazy" onError={() => setSource(source === artwork(id) ? sprite(id) : '')} />
+}
+
+function PokemonCard({ item, go }) {
+  const id = numberFromUrl(item.url)
+  const [info, setInfo] = useState(null)
+  const [unavailable, setUnavailable] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getCardDetails(item.name)
+      .then(data => { if (active) setInfo(data) })
+      .catch(() => { if (active) setUnavailable(true) })
+    return () => { active = false }
+  }, [item.name])
+
+  const primaryType = info?.types?.[0]?.type.name || 'normal'
+  return <button className={`card card-type-${primaryType}`} onClick={() => go(`/pokemon/${item.name}`)}>
+    <span className="card-number">#{String(id).padStart(3, '0')}</span>
+    <span className="card-art"><PokemonArt id={id} name={item.name} /></span>
+    <span className="card-info"><strong>{formatName(item.name)}</strong><span className="card-arrow" aria-hidden="true">↗</span></span>
+    {info ? <><span className="card-types">{info.types.map(({ type }) => <span className="card-type" key={type.name}><TypeIcon type={type.name} />{typeNames[type.name] || formatName(type.name)}</span>)}</span><span className="card-measures"><span><small>Altura</small><b>{(info.height / 10).toLocaleString('pt-BR')} m</b></span><span><small>Peso</small><b>{(info.weight / 10).toLocaleString('pt-BR')} kg</b></span></span></> : <span className="card-extra-placeholder" aria-hidden="true">{unavailable ? 'Detalhes na ficha' : 'Carregando informações…'}</span>}
+  </button>
 }
 
 function App() {
@@ -159,7 +193,7 @@ function App() {
         {typeError && <div className="error-block" role="alert"><p>{typeError}</p><button onClick={() => { setSelectedType('all'); setTypeSet(null) }}>Mostrar todos</button></div>}
         {!catalogLoading && !catalogError && !typeLoading && !typeError && <>
           <div className="result-line" role="status"><span>{shown.length.toLocaleString('pt-BR')} resultados</span><span>{resultStart}–{resultEnd} de {shown.length.toLocaleString('pt-BR')}</span></div>
-          {pageEntries.length ? <div className="cards">{pageEntries.map(item => { const id = numberFromUrl(item.url); return <button className="card" key={item.name} onClick={() => go(`/pokemon/${item.name}`)}><span className="card-number">#{String(id).padStart(3, '0')}</span><PokemonArt key={id} id={id} name={item.name} /><strong>{formatName(item.name)}</strong><span className="card-arrow" aria-hidden="true">↗</span></button> })}</div> : <div className="empty-block"><h3>Nenhum resultado</h3><p>Tente outro nome, número ou tipo.</p><button onClick={() => { setQuery(''); setSelectedType('all'); setSelectedRegion('all'); setTypeSet(null); setPage(1) }}>Limpar filtros</button></div>}
+          {pageEntries.length ? <div className="cards">{pageEntries.map(item => <PokemonCard key={item.name} item={item} go={go} />)}</div> : <div className="empty-block"><h3>Nenhum resultado</h3><p>Tente outro nome, número ou tipo.</p><button onClick={() => { setQuery(''); setSelectedType('all'); setSelectedRegion('all'); setTypeSet(null); setPage(1) }}>Limpar filtros</button></div>}
           {pageCount > 1 && <nav className="pagination" aria-label="Páginas do catálogo"><div className="page-controls"><button disabled={currentPage === 1} onClick={() => moveToPage(currentPage - 1)}>← Anterior</button><span>Página {currentPage} de {pageCount}</span><button disabled={currentPage === pageCount} onClick={() => moveToPage(currentPage + 1)}>Próxima →</button></div><form className="page-jump" onSubmit={jumpToPage}><label htmlFor="jump-page">Ir para página</label><input id="jump-page" type="number" inputMode="numeric" min="1" max={pageCount} value={jumpPage} onChange={event => setJumpPage(event.target.value)} required /><button type="submit">Ir</button></form></nav>}
         </>}
       </section>
