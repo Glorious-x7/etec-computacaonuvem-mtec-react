@@ -148,3 +148,24 @@
   .card-measures small{font-size:11px}
   .card-measures b{font-size:12px}
 }
+
+/* Cantos suaves nos elementos interativos; os símbolos dos tipos são dos jogos. */
+.catalog,.detail-page{border-radius:16px}
+.filters{border-radius:12px}
+.card{border-radius:12px}
+.card-art{border-radius:8px}
+.card-type,.type,.category,.moves span,.varieties button{border-radius:999px}
+.picker-trigger,.sort-options,.page-jump input,.pagination button,.empty-block button,.error-block button{border-radius:9px}
+.picker-menu{border-radius:10px}
+.picker-menu button{border-radius:7px}
+.sort-options button{border-radius:6px}
+.region-list button{border-radius:8px}
+.profile-art,.facts>div,.evolution-list button{border-radius:10px}
+.hero-feature{border-radius:10px}
+img.type-icon{display:inline-block;background:none;object-fit:contain;vertical-align:middle}
+.card-type img.type-icon{width:18px;height:18px}
+@media(max-width:500px){
+  .catalog,.detail-page{border-radius:12px}
+  .card{border-radius:10px}
+  .card-type img.type-icon{width:16px;height:16px}
+}
