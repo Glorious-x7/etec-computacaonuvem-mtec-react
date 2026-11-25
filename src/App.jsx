@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   API, PAGE_SIZE, artwork, descriptionFor, evolutionStages, filteredEntries,
   fieldNotes, formatName, habitatNames, numberFromUrl, regions, sprite, statNames, typeNames, types,
@@ -31,7 +31,7 @@ function PokemonArt({ id, name, className = '' }) {
     loading="lazy" onError={() => setSource(source === artwork(id) ? sprite(id) : '')} />
 }
 
-function PokemonCard({ item, go }) {
+function PokemonCard({ item, openPokemon }) {
   const id = numberFromUrl(item.url)
   const [info, setInfo] = useState(null)
   const [unavailable, setUnavailable] = useState(false)
@@ -45,10 +45,10 @@ function PokemonCard({ item, go }) {
   }, [item.name])
 
   const primaryType = info?.types?.[0]?.type.name || 'normal'
-  return <button className={`card card-type-${primaryType}`} onClick={() => go(`/pokemon/${item.name}`)}>
+  return <button className={`card card-type-${primaryType}`} onClick={() => openPokemon(item.name)} aria-label={`Abrir ficha de ${formatName(item.name)}`}>
     <span className="card-number">#{String(id).padStart(3, '0')}</span>
     <span className="card-art"><PokemonArt id={id} name={item.name} /></span>
-    <span className="card-info"><strong>{formatName(item.name)}</strong><span className="card-arrow" aria-hidden="true">↗</span></span>
+    <span className="card-info"><strong>{formatName(item.name)}</strong><span className="card-open" aria-hidden="true">Ver ficha</span></span>
     {info ? <><span className="card-types">{info.types.map(({ type }) => <span className="card-type" key={type.name}><TypeIcon type={type.name} />{typeNames[type.name] || formatName(type.name)}</span>)}</span><span className="card-measures"><span><small>Altura</small><b>{(info.height / 10).toLocaleString('pt-BR')} m</b></span><span><small>Peso</small><b>{(info.weight / 10).toLocaleString('pt-BR')} kg</b></span></span></> : <span className="card-extra-placeholder" aria-hidden="true">{unavailable ? 'Detalhes na ficha' : 'Carregando informações…'}</span>}
   </button>
 }
@@ -73,7 +73,10 @@ function App() {
   const [detailLoading, setDetailLoading] = useState(false)
   const [detailError, setDetailError] = useState('')
   const [detailTry, setDetailTry] = useState(0)
+  const [selectedPokemon, setSelectedPokemon] = useState(null)
+  const closeButton = useRef(null)
   const name = path.match(/^\/pokemon\/([a-z0-9-]+)\/?$/)?.[1]
+  const activeName = selectedPokemon || name
 
   useEffect(() => {
     const update = () => setPath(location.pathname)
@@ -101,7 +104,7 @@ function App() {
   }, [selectedType])
 
   useEffect(() => {
-    if (!name) return
+    if (!activeName) return
     const controller = new AbortController()
     async function load() {
       setDetailLoading(true)
@@ -110,10 +113,10 @@ function App() {
       try {
         let pokemon
         try {
-          pokemon = await getJson(`${API}/pokemon/${name}`, controller.signal)
+          pokemon = await getJson(`${API}/pokemon/${activeName}`, controller.signal)
         } catch (error) {
           if (error.message !== 'Pokémon não encontrado.') throw error
-          const species = await getJson(`${API}/pokemon-species/${name}`, controller.signal)
+          const species = await getJson(`${API}/pokemon-species/${activeName}`, controller.signal)
           const variety = species.varieties.find(item => item.is_default)?.pokemon.name
           if (!variety) throw error
           pokemon = await getJson(`${API}/pokemon/${variety}`, controller.signal)
@@ -139,12 +142,41 @@ function App() {
     }
     load()
     return () => controller.abort()
-  }, [name, detailTry])
+  }, [activeName, detailTry])
+
+  useEffect(() => {
+    if (!selectedPokemon) return
+    const previousFocus = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    closeButton.current?.focus()
+    const onKeyDown = event => {
+      if (event.key === 'Escape') setSelectedPokemon(null)
+      if (event.key === 'Tab') {
+        const focusable = [...document.querySelectorAll('.pokemon-modal button:not(:disabled), .pokemon-modal a[href], .pokemon-modal input')]
+        const first = focusable[0]
+        const last = focusable.at(-1)
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+      }
+    }
+    addEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      removeEventListener('keydown', onKeyDown)
+      previousFocus?.focus()
+    }
+  }, [selectedPokemon])
 
   function go(to) {
     history.pushState({}, '', to)
     setPath(to)
     scrollTo({ top: 0, behavior: 'auto' })
+  }
+
+  function openPokemon(nextName) {
+    setDetail(null)
+    setSelectedPokemon(nextName)
   }
 
   function moveToPage(nextPage) {
@@ -169,7 +201,7 @@ function App() {
   const displayCount = entries.length.toLocaleString('pt-BR')
 
   return <div className="app-shell">
-    <header className="topbar"><div className="topbar-inner"><button className="logo" onClick={() => go('/')} aria-label="Pokéguia, ir ao catálogo"><img src="/logo.svg" alt="" /><span>Poké<strong>guia</strong></span></button><nav aria-label="Navegação principal"><button onClick={() => go('/')} className={!name ? 'active' : ''}>Explorar</button></nav></div></header>
+    <header className="topbar"><div className="topbar-inner"><button className="logo" onClick={() => go('/')} aria-label="Pokéguia, ir ao catálogo"><img src="/logo.svg" alt="" /><span>Poké<strong>guia</strong></span></button><span className="topbar-caption">Catálogo de Pokémon</span></div></header>
     <main>{name ? <>
       <div className="detail-heading"><div className="wrap"><button className="back" onClick={() => go('/')}>← Voltar ao catálogo</button><p>Pokédex / Ficha</p></div></div>
       <div className="wrap detail-page">
@@ -178,7 +210,7 @@ function App() {
         {detail && !detailLoading && <Detail data={detail} go={go} />}
       </div>
     </> : <>
-      <section className="hero"><div className="wrap hero-inner"><div className="hero-copy"><p className="hero-label">Guia de campo Pokémon</p><h1>De Kanto<br /><em>a Paldea.</em></h1><p>Explore Pokémon por região, tipo ou número. Cada ficha mostra atributos e evoluções.</p><a href="#catalog-title" className="hero-link">Começar a explorar <span aria-hidden="true">↗</span></a></div><div className="hero-feature" aria-hidden="true"><span className="feature-index">Em destaque · Kanto</span><img src={artwork(25)} alt="" /><span className="feature-name">Pikachu</span><span className="feature-bottom">Nº 025 <span>Tipo elétrico</span></span></div></div></section>
+      <section className="hero"><div className="wrap hero-inner"><div className="hero-copy"><p className="hero-label">Guia de campo Pokémon</p><h1>Qual Pokémon você<br /><em>quer conhecer?</em></h1><p>Pesquise, compare e abra a ficha sem sair do catálogo.</p></div></div></section>
       <section className="catalog wrap" aria-labelledby="catalog-title">
         <div className="catalog-title"><div><p className="catalog-eyebrow">Lista de Pokémon</p><h2 id="catalog-title">Encontre um Pokémon</h2><p>Uma ficha para cada espécie e suas diferentes formas.</p></div><span>{catalogLoading ? 'Carregando…' : `${displayCount} registros`}</span></div>
         <div className="filters">
@@ -193,11 +225,12 @@ function App() {
         {typeError && <div className="error-block" role="alert"><p>{typeError}</p><button onClick={() => { setSelectedType('all'); setTypeSet(null) }}>Mostrar todos</button></div>}
         {!catalogLoading && !catalogError && !typeLoading && !typeError && <>
           <div className="result-line" role="status"><span>{shown.length.toLocaleString('pt-BR')} resultados</span><span>{resultStart}–{resultEnd} de {shown.length.toLocaleString('pt-BR')}</span></div>
-          {pageEntries.length ? <div className="cards">{pageEntries.map(item => <PokemonCard key={item.name} item={item} go={go} />)}</div> : <div className="empty-block"><h3>Nenhum resultado</h3><p>Tente outro nome, número ou tipo.</p><button onClick={() => { setQuery(''); setSelectedType('all'); setSelectedRegion('all'); setTypeSet(null); setPage(1) }}>Limpar filtros</button></div>}
+          {pageEntries.length ? <div className="cards">{pageEntries.map(item => <PokemonCard key={item.name} item={item} openPokemon={openPokemon} />)}</div> : <div className="empty-block"><h3>Nenhum resultado</h3><p>Tente outro nome, número ou tipo.</p><button onClick={() => { setQuery(''); setSelectedType('all'); setSelectedRegion('all'); setTypeSet(null); setPage(1) }}>Limpar filtros</button></div>}
             {pageCount > 1 && <nav className="pagination" aria-label="Páginas do catálogo"><div className="page-controls"><button className="page-nav-button" disabled={currentPage === 1} onClick={() => moveToPage(currentPage - 1)}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg><span>Anterior</span></button><span className="page-indicator">Página <strong>{currentPage}</strong> de <strong>{pageCount}</strong></span><button className="page-nav-button" disabled={currentPage === pageCount} onClick={() => moveToPage(currentPage + 1)}><span>Próxima</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button></div><form className="page-jump" onSubmit={jumpToPage}><label htmlFor="jump-page">Ir para página</label><input id="jump-page" type="number" inputMode="numeric" min="1" max={pageCount} value={jumpPage} onChange={event => setJumpPage(event.target.value)} required /><button type="submit">Ir</button></form></nav>}
         </>}
       </section>
     </>}</main>
+    {selectedPokemon && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setSelectedPokemon(null) }}><section className="pokemon-modal" role="dialog" aria-modal="true" aria-label={`Ficha de ${formatName(selectedPokemon)}`}><div className="modal-toolbar"><span>Ficha do Pokémon</span><button ref={closeButton} className="modal-close" onClick={() => setSelectedPokemon(null)} aria-label="Fechar ficha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" /></svg></button></div><div className="modal-content">{detailLoading && <div className="loading-block" role="status">Carregando ficha do Pokémon…</div>}{detailError && <div className="error-block" role="alert"><p>{detailError}</p><button onClick={() => setDetailTry(value => value + 1)}>Tentar novamente</button></div>}{detail && !detailLoading && <Detail data={detail} go={to => { setSelectedPokemon(to.split('/').pop()); setDetail(null) }} />}</div></section></div>}
     <footer><div className="wrap footer-inner"><span>Pokéguia</span><span>Feito para quem gosta de descobrir Pokémon, um por um.</span></div></footer>
   </div>
 }

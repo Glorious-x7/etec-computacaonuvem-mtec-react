@@ -202,3 +202,49 @@ img.type-icon{display:inline-block;background:none;object-fit:contain;vertical-a
   .pagination .page-nav-button svg{width:15px;height:15px}
   .pagination .page-indicator{min-height:38px;padding:5px 8px;font-size:11px}
 }
+
+/* Entrada curta: a busca começa logo após a apresentação. */
+.topbar-caption{color:#bbc9c8;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.hero-inner{min-height:0;padding-block:33px 36px;gap:24px}
+.hero h1{font-size:clamp(34px,4.3vw,54px);margin-bottom:10px}
+.hero-label{margin-bottom:9px}
+.hero-copy>p:not(.hero-label){margin:0;font-size:15px}
+.hero-number{align-self:end;border:1px solid #53616b;border-radius:999px;padding:8px 14px;color:#b9c9c7;font:600 11px 'Space Grotesk',sans-serif;letter-spacing:.06em;white-space:nowrap}
+.catalog{margin-top:20px}
+.card-info{align-items:center}
+.card-open{flex:none;align-self:center;color:#4e5d60;font-size:11px;font-weight:700;white-space:nowrap}
+.card:hover .card-open,.card:focus-visible .card-open{color:var(--teal);text-decoration:underline;text-underline-offset:3px}
+
+/* A ficha usa os mesmos dados da página direta, sem desmontar o catálogo. */
+.modal-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:24px;background:rgba(8,19,29,.72);backdrop-filter:blur(3px)}
+.pokemon-modal{display:flex;flex-direction:column;width:min(100%,1050px);max-height:calc(100dvh - 48px);overflow:hidden;background:#fff;border:1px solid #d7ddd9;border-radius:22px;box-shadow:0 24px 80px rgba(0,0,0,.32)}
+.modal-toolbar{display:flex;align-items:center;justify-content:space-between;min-height:60px;padding:10px 24px;border-bottom:1px solid var(--outline);color:var(--ink);font-size:13px;font-weight:700}
+.modal-close{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--outline);border-radius:50%;background:#f6f7f4;color:var(--ink);cursor:pointer}
+.modal-close:hover,.modal-close:focus-visible{background:var(--yellow);border-color:var(--yellow)}
+.modal-close svg{width:19px;height:19px}
+.modal-content{overflow-y:auto;overscroll-behavior:contain;padding:24px;scrollbar-gutter:stable}
+.modal-content .profile{grid-template-columns:280px 1fr;gap:28px}
+.modal-content .profile-art{height:280px}
+.modal-content .profile-art img,.modal-content .profile-art .art-fallback{height:210px}
+.modal-content .detail-columns{gap:28px}
+@media(max-width:720px){
+  .hero-inner{padding-block:25px 27px}
+  .catalog{margin-top:14px}
+  .hero-number{display:none}
+  .modal-backdrop{padding:0}
+  .pokemon-modal{width:100%;height:100dvh;max-height:none;border:0;border-radius:0}
+  .modal-toolbar{min-height:58px;padding-inline:16px}
+  .modal-content{padding:16px;scrollbar-gutter:auto}
+  .modal-content .profile{grid-template-columns:1fr;gap:10px}
+  .modal-content .profile-art{height:235px}
+  .modal-content .profile-art img,.modal-content .profile-art .art-fallback{height:170px}
+  .modal-content .detail-columns{gap:0}
+}
+@media(max-width:500px){
+  .topbar-caption{font-size:10px;letter-spacing:0}
+  .hero-inner{display:block;padding-block:22px 25px}
+  .hero h1{font-size:clamp(34px,9vw,43px)}
+  .hero-copy>p:not(.hero-label){font-size:14px;line-height:1.45}
+  .card-info{align-items:flex-start;flex-direction:column;gap:2px;min-height:0}
+  .card-open{align-self:flex-start;font-size:10px}
+}
