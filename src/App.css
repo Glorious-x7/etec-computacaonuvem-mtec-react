@@ -57,9 +57,6 @@
 .picker-menu{position:absolute;top:calc(100% + 5px);left:0;right:0;max-height:290px;overflow:auto;background:#fffefb;border:1px solid #b9c5c0;box-shadow:5px 7px 0 #1724321f;z-index:10;padding:5px}
 .picker-menu button{width:100%;height:35px;display:flex;align-items:center;gap:9px;border:0;background:none;color:var(--ink);padding:0 9px;font-size:13px;text-align:left}
 .picker-menu button:hover,.picker-menu button.chosen{background:#f4e8ba}
-.type-dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:#8a9695;flex:none;border:1px solid #0002}
-.type-dot.all{background:linear-gradient(135deg,#db5d4d 50%,#f4c84f 50%)}
-.type-dot-fire{background:#e67a3e}.type-dot-water{background:#4e94cf}.type-dot-electric{background:#e4bd38}.type-dot-grass{background:#78a94c}.type-dot-ice{background:#73c3cf}.type-dot-fighting{background:#ba6d49}.type-dot-poison{background:#9b6aad}.type-dot-ground{background:#b99a5b}.type-dot-flying{background:#82a9c2}.type-dot-psychic{background:#d77293}.type-dot-bug{background:#a2b64b}.type-dot-rock{background:#9e8c67}.type-dot-ghost{background:#81709e}.type-dot-dragon{background:#6477b5}.type-dot-dark{background:#66615e}.type-dot-steel{background:#8ca5aa}.type-dot-fairy{background:#d993b6}
 .sort-options{display:flex;height:44px;border:1px solid #b9c5c0;background:#fffefb;padding:3px;gap:3px}
 .sort-options button{flex:1;border:0;background:transparent;color:#53615e;font-weight:700;font-size:13px}
 .sort-options button.selected{background:var(--ink);color:#fff}
@@ -85,3 +82,12 @@
 @media(max-width:720px){.hero-feature{width:200px;height:215px}.hero-feature img{width:135px;height:135px}.feature-index,.feature-bottom{font-size:11px}}
 @media(max-width:500px){.hero h1{font-size:44px}.hero-feature{width:100%;height:152px;transform:none;grid-template-columns:minmax(0,1fr) 110px;grid-template-rows:auto 1fr auto;padding:10px;overflow:hidden}.hero-feature img{grid-column:2;grid-row:1/4;align-self:center;justify-self:center;width:108px;height:120px;object-fit:contain}.feature-index{grid-column:1;grid-row:1;font-size:11px}.feature-name{grid-column:1;grid-row:2;align-self:center;font-size:25px}.feature-bottom{grid-column:1;grid-row:3;display:flex;gap:8px;font-size:11px}.feature-bottom span{display:inline}.hero-inner{gap:24px}}
 .profile-kicker{font-size:13px;letter-spacing:0;text-transform:none}
+
+.type-icon{--type-color:#82918e;width:27px;height:27px;display:inline-grid;place-items:center;flex:none;border-radius:50%;background:var(--type-color);color:#fff}
+.type-icon svg{width:17px;height:17px;display:block}
+.type-icon-all{--type-color:#354b58}
+.type-icon-normal{--type-color:#85918d}.type-icon-fire{--type-color:#e5773a}.type-icon-water{--type-color:#4b8fc6}.type-icon-electric{--type-color:#d4ac29}.type-icon-grass{--type-color:#5eaf52}.type-icon-ice{--type-color:#63b9c5}.type-icon-fighting{--type-color:#b86a45}.type-icon-poison{--type-color:#9466a8}.type-icon-ground{--type-color:#af8b4d}.type-icon-flying{--type-color:#789ebc}.type-icon-psychic{--type-color:#cf7094}.type-icon-bug{--type-color:#8ea543}.type-icon-rock{--type-color:#917f5f}.type-icon-ghost{--type-color:#7b6b98}.type-icon-dragon{--type-color:#6476ae}.type-icon-dark{--type-color:#5a5866}.type-icon-steel{--type-color:#738f99}.type-icon-fairy{--type-color:#cc84a8}
+.picker-trigger{gap:10px}
+.picker-menu button{height:43px;gap:10px}
+.picker-menu{max-height:310px}
+@media(max-width:500px){.type-icon{width:25px;height:25px}.type-icon svg{width:16px;height:16px}.picker-trigger{padding-inline:8px;font-size:12px}.picker-menu{max-height:270px}}
