@@ -1,6 +1,6 @@
 # Pokéguia
 
-Aplicação React criada com Vite para consultar a [PokéAPI](https://pokeapi.co/docs/v2).
+Aplicação React criada com Vite para explorar Pokémon.
 
 ## Executar
 
@@ -10,7 +10,7 @@ cp .env.example .env
 npm run dev
 ```
 
-O app consulta o catálogo completo disponibilizado pela PokéAPI (incluindo variantes). Há busca por nome ou número, filtro por tipo, ordenação, páginas de 24 resultados e um campo para ir diretamente a qualquer página. O layout se adapta automaticamente a celulares. A rota `/pokemon/:nome` apresenta descrição, habilidades, atributos, movimentos e linha de evolução. Algumas descrições originais são fornecidas apenas em inglês pela API.
+O catálogo inclui Pokémon e variantes. É possível buscar por nome ou número, filtrar por tipo e por região (de Kanto a Paldea), ordenar e ir diretamente a qualquer página. O layout se adapta automaticamente a celulares. A rota `/pokemon/:nome` apresenta descrição em português, habilidades, atributos, movimentos e linha de evolução.
 
 ## Render
 
