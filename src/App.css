@@ -169,3 +169,34 @@ img.type-icon{display:inline-block;background:none;object-fit:contain;vertical-a
   .card{border-radius:10px}
   .card-type img.type-icon{width:16px;height:16px}
 }
+
+/* Cantos perceptíveis e navegação de página com setas desenhadas. */
+.catalog,.detail-page{border-radius:22px}
+.filters{border-radius:16px}
+.filters input{border-radius:12px}
+.catalog-title>span{border-radius:999px}
+.card{border-radius:18px}
+.card-art{border-radius:12px}
+.picker-trigger,.picker-menu,.sort-options{border-radius:12px}
+.picker-menu button,.sort-options button{border-radius:9px}
+.region-list button{border-radius:999px}
+.hero-feature{border-radius:18px}
+.profile-art,.facts>div,.evolution-list button{border-radius:14px}
+.pagination{border-top:1px solid var(--outline);padding-top:24px}
+.page-controls{gap:10px}
+.pagination .page-nav-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border:1px solid var(--ink);border-radius:999px;padding:8px 15px;background:var(--ink);color:#fff;font-size:13px;line-height:1;transition:background .16s,transform .16s}
+.pagination .page-nav-button svg{width:17px;height:17px;flex:none}
+.pagination .page-nav-button:hover:not(:disabled){background:var(--teal);transform:translateY(-1px)}
+.pagination .page-nav-button:disabled{opacity:1;background:#f1f3f1;border-color:var(--outline);color:#7b8885}
+.pagination .page-indicator{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:5px 12px;border:1px solid var(--outline);border-radius:999px;background:#fff;font-size:13px;white-space:nowrap}
+.page-indicator strong{font-variant-numeric:tabular-nums;color:var(--ink)}
+.page-jump input{border-radius:10px}
+.page-jump button{border-radius:999px}
+@media(max-width:500px){
+  .catalog,.detail-page{border-radius:18px}
+  .card{border-radius:16px}
+  .page-controls{gap:5px}
+  .pagination .page-nav-button{gap:5px;min-height:40px;padding:7px 10px;font-size:12px}
+  .pagination .page-nav-button svg{width:15px;height:15px}
+  .pagination .page-indicator{min-height:38px;padding:5px 8px;font-size:11px}
+}
